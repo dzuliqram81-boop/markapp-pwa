@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0756c9">
+  <meta name="description" content="MARK!App — aplikasi absensi dan penilaian siswa UPT SMPN 1 Binamu.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <title>MARK!App</title>
+  <style>
+    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;font-family:Arial,sans-serif;background:#f1f5fb;color:#17345e}
+    .top{height:58px;background:#0756c9;color:white;display:flex;align-items:center;gap:11px;padding:8px 14px;box-shadow:0 2px 8px #0002}
+    .top img{width:40px;height:40px;border-radius:10px}.brand{font-weight:800;font-size:19px}.sub{font-size:11px;opacity:.9;margin-top:2px}
+    main{height:calc(100dvh - 58px);padding:0}iframe{display:block;border:0;width:100%;height:100%;background:white}
+    #setup{max-width:560px;margin:30px auto;padding:24px;background:white;border-radius:16px;box-shadow:0 4px 20px #1232}
+    #setup h2{margin-top:0}input{width:100%;padding:12px;border:1px solid #9bb4d8;border-radius:8px;font-size:15px}button{margin-top:12px;padding:12px 16px;border:0;border-radius:8px;background:#0756c9;color:white;font-weight:bold;font-size:15px}
+    .hint{font-size:13px;line-height:1.5;color:#53677f}.hidden{display:none!important}
+  </style>
+</head>
+<body>
+<header class="top"><img src="icon-192.png" alt="Logo MARK!App"><div><div class="brand">MARK!App</div><div class="sub">Absensi • Nilai • Rapor</div></div></header>
+<main>
+  <section id="setup">
+    <h2>Hubungkan MARK!App</h2>
+    <p>Masukkan URL Web App Google Apps Script MARK!App yang berakhir dengan <b>/exec</b>. URL disimpan hanya pada browser/perangkat ini.</p>
+    <input id="appurl" type="url" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="url">
+    <button id="save">Buka MARK!App</button>
+    <p class="hint">Jika belum memiliki URL Web App, buka Apps Script → Deploy → Manage deployments, lalu salin URL Web app.</p>
+  </section>
+  <iframe id="app" class="hidden" title="Aplikasi MARK!App" allow="clipboard-read; clipboard-write"></iframe>
+</main>
+<script>
+const input=document.getElementById('appurl'), frame=document.getElementById('app'), setup=document.getElementById('setup');
+const saved=localStorage.getItem('markapp-webapp-url'); if(saved) input.value=saved;
+function openApp(){let u=input.value.trim(); if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec(?:\?.*)?$/.test(u)){alert('Masukkan URL Web App Google Apps Script yang benar dan berakhir dengan /exec.');return;} localStorage.setItem('markapp-webapp-url',u);frame.src=u;frame.classList.remove('hidden');setup.classList.add('hidden');}
+document.getElementById('save').addEventListener('click',openApp);
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
+</script>
+</body>
+</html>
